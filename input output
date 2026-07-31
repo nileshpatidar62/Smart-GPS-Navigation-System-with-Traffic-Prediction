@@ -1,54 +1,64 @@
+# Sample Input
 
-# AI Part
+Enter Number of Roads : 7
 
-Example
-Current Traffic =
-0.4 × Historical Traffic
-+ 0.3 × Current Road Load
-+ 0.2 × Time of Day
-+ 0.1 × Weather
+Road 1
+Source : A
+Destination : B
+Distance (km) : 10
+Base Travel Time (minutes) : 15
 
-Then classify traffic as:
+Road 2
+Source : A
+Destination : C
+Distance (km) : 5
+Base Travel Time (minutes) : 8
 
-Low
+Road 3
+Source : B
+Destination : D
+Distance (km) : 12
+Base Travel Time (minutes) : 18
 
-Medium
+Road 4
+Source : C
+Destination : D
+Distance (km) : 6
+Base Travel Time (minutes) : 9
 
-High
+Road 5
+Source : D
+Destination : E
+Distance (km) : 8
+Base Travel Time (minutes) : 12
 
-The planner automatically avoids roads with predicted heavy traffic.
+Road 6
+Source : B
+Destination : E
+Distance (km) : 20
+Base Travel Time (minutes) : 28
+
+Road 7
+Source : C
+Destination : E
+Distance (km) : 15
+Base Travel Time (minutes) : 20
 
 
-# Sample Console Output
 
-========== SMART GPS =========
 
-Enter Source City :
-Bhopal
 
-Enter Destination :
-Indore
+# Sample Output
 
-Predicting Traffic...
+============= ROUTE RESULT =============
 
-Road 1 : Medium Traffic
-Road 2 : High Traffic
-Road 3 : Low Traffic
+Recommended Route
 
-Best Route:
+A -> C -> D -> E
 
-Bhopal
-↓
-Sehore
-↓
-Dewas
-↓
-Indore
+Total Distance : 19 km
+Estimated Time : 29.7 minutes
+Traffic Level : Moderate
+Congestion : 35%
 
-Distance : 192 km
-
-Estimated Time : 3 hr 10 min
-
-Traffic : Low
-
-Alternative Route Available : Yes
+========================================
