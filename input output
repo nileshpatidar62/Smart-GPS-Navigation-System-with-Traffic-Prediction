@@ -1,1 +1,54 @@
 
+# AI Part
+
+Example
+Current Traffic =
+0.4 × Historical Traffic
++ 0.3 × Current Road Load
++ 0.2 × Time of Day
++ 0.1 × Weather
+
+Then classify traffic as:
+
+Low
+
+Medium
+
+High
+
+The planner automatically avoids roads with predicted heavy traffic.
+
+
+# Sample Console Output
+
+========== SMART GPS =========
+
+Enter Source City :
+Bhopal
+
+Enter Destination :
+Indore
+
+Predicting Traffic...
+
+Road 1 : Medium Traffic
+Road 2 : High Traffic
+Road 3 : Low Traffic
+
+Best Route:
+
+Bhopal
+↓
+Sehore
+↓
+Dewas
+↓
+Indore
+
+Distance : 192 km
+
+Estimated Time : 3 hr 10 min
+
+Traffic : Low
+
+Alternative Route Available : Yes
