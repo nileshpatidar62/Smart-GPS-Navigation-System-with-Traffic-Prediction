@@ -1,78 +1,104 @@
+ 
+
 #ifndef GRAPH_H
 #define GRAPH_H
 
 #include <iostream>
 #include <vector>
 #include <unordered_map>
-#include <string>
+#include <queue>
+#include <limits>
+#include <algorithm>
 
 using namespace std;
 
-// Represents a road between two cities
+//--------------------------------------------
+// Edge Structure
+//--------------------------------------------
 struct Edge
 {
     string destination;
-    int distance;
+    double distance;      // in KM
+    int trafficLevel;     // 1=Low 2=Medium 3=High
+    double delay;         // Delay in minutes
 
-    Edge(string dest, int dist)
+    Edge(string dest, double dist, int traffic = 1, double d = 0.0)
     {
         destination = dest;
         distance = dist;
+        trafficLevel = traffic;
+        delay = d;
     }
 };
 
+//--------------------------------------------
+// Graph Class
+//--------------------------------------------
 class Graph
 {
 private:
 
-    // Adjacency List
-    unordered_map<string, vector<Edge>> adjList;
+    unordered_map<string, vector<Edge>> adjacencyList;
 
 public:
 
     Graph();
 
-    // Add a new city
+    //-------------------------
+    // City Operations
+    //-------------------------
     void addCity(const string &city);
 
-    // Add road between two cities
-    void addRoad(const string &source,
-                 const string &destination,
-                 int distance);
-
-    // Check if city exists
     bool cityExists(const string &city) const;
 
-    // Display complete graph
-    void displayGraph() const;
+    vector<string> getCities() const;
 
-    // Return adjacency list
-    const unordered_map<string, vector<Edge>>& getGraph() const;
+    //-------------------------
+    // Road Operations
+    //-------------------------
+    void addRoad(const string &source,
+                 const string &destination,
+                 double distance);
 
-    // Return neighbors of a city
-    const vector<Edge>& getNeighbors(const string &city) const;
-
-    // Load road network from file
-    bool loadFromFile(const string &filename);
-
-    // Save graph to file
-    bool saveToFile(const string &filename) const;
-
-    // Total number of cities
-    int totalCities() const;
-
-    // Total number of roads
-    int totalRoads() const;
-
-    // Remove city
-    void removeCity(const string &city);
-
-    // Remove road
     void removeRoad(const string &source,
                     const string &destination);
 
-    // Clear graph
+    //-------------------------
+    // Display
+    //-------------------------
+    void displayGraph() const;
+
+    //-------------------------
+    // Traffic
+    //-------------------------
+    void updateTraffic();
+
+    double getTrafficDelay(int trafficLevel) const;
+
+    //-------------------------
+    // Shortest Path
+    //-------------------------
+    pair<double, vector<string>>
+    dijkstra(const string &source,
+             const string &destination);
+
+    //-------------------------
+    // Route Information
+    //-------------------------
+    double calculateRouteDistance(
+            const vector<string> &path);
+
+    double calculateTravelTime(
+            const vector<string> &path);
+
+    //-------------------------
+    // Utilities
+    //-------------------------
+    bool empty() const;
+
     void clear();
+
+    unordered_map<string, vector<Edge>>& getGraph();
 };
 
 #endif
