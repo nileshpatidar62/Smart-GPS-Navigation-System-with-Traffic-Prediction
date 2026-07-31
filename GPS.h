@@ -1,71 +1,70 @@
-#ifndef GPS_H
+ #ifndef GPS_H
 #define GPS_H
 
 #include <iostream>
 #include <vector>
-#include <string>
-#include <unordered_map>
 #include <queue>
 #include <limits>
+#include <algorithm>
+#include <iomanip>
 
 #include "Graph.h"
+#include "TrafficPredictor.h"
 
 using namespace std;
 
-class GPS
-{
+struct RouteResult {
+
+    vector<int> path;
+
+    double totalDistance;
+    double totalTime;
+
+    bool found;
+
+    RouteResult() {
+        totalDistance = 0;
+        totalTime = 0;
+        found = false;
+    }
+};
+
+class GPS {
+
 private:
 
-    Graph &graph;
+    Graph& graph;
 
-    // Calculate heuristic for A* Search
-    int heuristic(const string &current,
-                  const string &destination);
-
-    // Print shortest path
-    void printPath(
-        unordered_map<string, string> &parent,
-        const string &source,
-        const string &destination);
+    TrafficPredictor trafficPredictor;
 
 public:
 
-    // Constructor
-    GPS(Graph &g);
+    GPS(Graph& g);
 
-    // Dijkstra Algorithm
-    void shortestRoute(
-        const string &source,
-        const string &destination);
+    RouteResult findShortestRoute(
+        const string& source,
+        const string& destination
+    );
 
-    // A* Search Algorithm
-    void fastestRoute(
-        const string &source,
-        const string &destination);
+    RouteResult findFastestRoute(
+        const string& source,
+        const string& destination,
+        int hour,
+        int dayOfWeek
+    );
 
-    // Calculate total distance of a path
-    int calculateDistance(
-        const vector<string> &path);
-
-    // Check if city exists
-    bool isValidCity(
-        const string &city);
-
-    // Display available cities
-    void displayCities();
-
-    // Print complete route
     void displayRoute(
-        const vector<string> &path);
+        const RouteResult& result,
+        int hour,
+        int dayOfWeek
+    );
 
-    // Show route statistics
-    void routeStatistics(
-        const vector<string> &path);
-
-    // Find alternative route
-    void alternativeRoute(
-        const string &source,
-        const string &destination);
+    void compareRoutes(
+        const string& source,
+        const string& destination,
+        int hour,
+        int dayOfWeek
+    );
 };
 
 #endif
