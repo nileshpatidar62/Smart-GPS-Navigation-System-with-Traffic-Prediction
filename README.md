@@ -1,4 +1,4 @@
-# 🚗 Smart GPS Route Planner with AI-Based Traffic Prediction
+# Smart GPS Route Planner with AI-Based Traffic Prediction
 
  
 
