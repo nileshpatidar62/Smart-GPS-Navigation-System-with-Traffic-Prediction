@@ -1,200 +1,108 @@
 #include "Graph.h"
 
-#include <fstream>
-#include <algorithm>
-
-using namespace std;
-
-// Constructor
-Graph::Graph()
-{
+Graph::Graph() {
 }
 
-// Add a city
-void Graph::addCity(const string &city)
-{
-    if (!cityExists(city))
-    {
-        adjList[city] = vector<Edge>();
+int Graph::addCity(const string& cityName) {
+
+    if (cityToId.find(cityName) != cityToId.end()) {
+        return cityToId[cityName];
     }
+
+    int newId = idToCity.size();
+
+    cityToId[cityName] = newId;
+    idToCity.push_back(cityName);
+
+    adjacencyList.push_back(vector<Edge>());
+
+    return newId;
 }
 
-// Check if city exists
-bool Graph::cityExists(const string &city) const
-{
-    return adjList.find(city) != adjList.end();
+void Graph::addRoad(
+    const string& source,
+    const string& destination,
+    double distance,
+    double baseTime
+) {
+
+    int sourceId = addCity(source);
+    int destinationId = addCity(destination);
+
+    // Bidirectional road
+    adjacencyList[sourceId].push_back(
+        Edge(destinationId, distance, baseTime)
+    );
+
+    adjacencyList[destinationId].push_back(
+        Edge(sourceId, distance, baseTime)
+    );
 }
 
-// Add road (Undirected Graph)
-void Graph::addRoad(const string &source,
-                    const string &destination,
-                    int distance)
-{
-    if (!cityExists(source))
-        addCity(source);
+int Graph::getCityId(const string& cityName) const {
 
-    if (!cityExists(destination))
-        addCity(destination);
+    auto it = cityToId.find(cityName);
 
-    adjList[source].push_back(Edge(destination, distance));
-    adjList[destination].push_back(Edge(source, distance));
+    if (it == cityToId.end()) {
+        return -1;
+    }
+
+    return it->second;
 }
 
-// Display Graph
-void Graph::displayGraph() const
-{
-    cout << "\n========== ROAD NETWORK ==========\n";
+string Graph::getCityName(int id) const {
 
-    for (const auto &city : adjList)
-    {
-        cout << city.first << " -> ";
+    if (id < 0 || id >= static_cast<int>(idToCity.size())) {
+        return "Unknown";
+    }
 
-        for (const auto &road : city.second)
-        {
-            cout << "("
-                 << road.destination
-                 << ", "
-                 << road.distance
-                 << " km) ";
+    return idToCity[id];
+}
+
+const vector<Edge>& Graph::getNeighbors(int cityId) const {
+
+    return adjacencyList[cityId];
+}
+
+int Graph::getNumberOfCities() const {
+
+    return idToCity.size();
+}
+
+bool Graph::cityExists(const string& cityName) const {
+
+    return cityToId.find(cityName) != cityToId.end();
+}
+
+void Graph::displayCities() const {
+
+    cout << "\nAvailable Locations:\n";
+    cout << "-----------------------------\n";
+
+    for (int i = 0; i < static_cast<int>(idToCity.size()); i++) {
+        cout << i + 1 << ". " << idToCity[i] << endl;
+    }
+
+    cout << "-----------------------------\n";
+}
+
+void Graph::displayGraph() const {
+
+    cout << "\nRoad Network:\n";
+    cout << "====================================\n";
+
+    for (int i = 0; i < static_cast<int>(adjacencyList.size()); i++) {
+
+        cout << idToCity[i] << " -> ";
+
+        for (const Edge& edge : adjacencyList[i]) {
+
+            cout << idToCity[edge.destination]
+                 << " (" << edge.distance << " km)  ";
         }
 
         cout << endl;
     }
-}
 
-// Return adjacency list
-const unordered_map<string, vector<Edge>>& Graph::getGraph() const
-{
-    return adjList;
-}
-
-// Return neighbors
-const vector<Edge>& Graph::getNeighbors(const string &city) const
-{
-    return adjList.at(city);
-}
-
-// Load graph from file
-bool Graph::loadFromFile(const string &filename)
-{
-    ifstream fin(filename);
-
-    if (!fin.is_open())
-        return false;
-
-    clear();
-
-    string source, destination;
-    int distance;
-
-    while (fin >> source >> destination >> distance)
-    {
-        addRoad(source, destination, distance);
-    }
-
-    fin.close();
-
-    return true;
-}
-
-// Save graph to file
-bool Graph::saveToFile(const string &filename) const
-{
-    ofstream fout(filename);
-
-    if (!fout.is_open())
-        return false;
-
-    for (const auto &city : adjList)
-    {
-        for (const auto &road : city.second)
-        {
-            if (city.first < road.destination)
-            {
-                fout << city.first << " "
-                     << road.destination << " "
-                     << road.distance << endl;
-            }
-        }
-    }
-
-    fout.close();
-
-    return true;
-}
-
-// Total cities
-int Graph::totalCities() const
-{
-    return adjList.size();
-}
-
-// Total roads
-int Graph::totalRoads() const
-{
-    int roads = 0;
-
-    for (const auto &city : adjList)
-        roads += city.second.size();
-
-    return roads / 2;
-}
-
-// Remove Road
-void Graph::removeRoad(const string &source,
-                       const string &destination)
-{
-    if (!cityExists(source) || !cityExists(destination))
-        return;
-
-    auto &list1 = adjList[source];
-
-    list1.erase(
-        remove_if(list1.begin(),
-                  list1.end(),
-                  [&](Edge e)
-                  {
-                      return e.destination == destination;
-                  }),
-        list1.end());
-
-    auto &list2 = adjList[destination];
-
-    list2.erase(
-        remove_if(list2.begin(),
-                  list2.end(),
-                  [&](Edge e)
-                  {
-                      return e.destination == source;
-                  }),
-        list2.end());
-}
-
-// Remove City
-void Graph::removeCity(const string &city)
-{
-    if (!cityExists(city))
-        return;
-
-    for (auto &node : adjList)
-    {
-        auto &roads = node.second;
-
-        roads.erase(
-            remove_if(roads.begin(),
-                      roads.end(),
-                      [&](Edge e)
-                      {
-                          return e.destination == city;
-                      }),
-            roads.end());
-    }
-
-    adjList.erase(city);
-}
-
-// Clear graph
-void Graph::clear()
-{
-    adjList.clear();
+    cout << "====================================\n";
 }
