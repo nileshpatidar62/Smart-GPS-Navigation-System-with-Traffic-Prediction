@@ -62,3 +62,43 @@ Traffic Level : Moderate
 Congestion : 35%
 
 ========================================
+
+
+
+
+
+# Example
+
+=============================================
+       SMART GPS ROUTE PLANNER
+       AI-Based Traffic Prediction
+=============================================
+
+1. Display Available Locations
+2. Find Shortest Route
+3. Find AI Traffic Optimized Route
+4. Compare Routes
+5. Display Road Network
+6. Exit
+
+Enter choice: 3
+
+Enter Source: Bhopal
+Enter Destination: Indore
+
+Enter Current Hour (0-23): 18
+Enter Day (1=Monday ... 7=Sunday): 5
+
+========================================
+             ROUTE RESULT
+========================================
+
+Recommended Route:
+
+Bhopal -> Sehore -> Indore
+
+Total Distance : 173.00 km
+Estimated Time : 388.50 minutes
+Traffic Level  : Severe
+Congestion     : 110.00%
+========================================
